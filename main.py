@@ -58,7 +58,29 @@ def registrar_usuario():
     except Exception as ex:
         return jsonify({'mensaje': 'Error al registrar usuario ❌', 'error': str(ex)}), 500
 
-
+@app.route('/api/registrar_alerta', methods=['POST'])
+def registrar_alerta():  # <- nombre correcto de la función
+    data = request.get_json()
+    cuenca = data.get('cuenca')
+    rio = data.get('rio')
+    nivel = data.get('nivel')
+    condicion = data.get('condicion')
+    pronostico = data.get('pronostico')
+    periodo = data.get('periodo')
+    
+    try:
+        cursor = mysql.connection.cursor()
+        sql = """
+            INSERT INTO Alertas (Cuencas, Rios, Niveles, Condiciones, Pronosticos, Periodos)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        datos = (cuenca, rio, nivel, condicion, pronostico, periodo)
+        cursor.execute(sql, datos)
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({'mensaje': 'Alerta Guardada correctamente ✅'})
+    except Exception as ex:
+        return jsonify({'mensaje': 'Error al Guardar Alerta ❌', 'error': str(ex)}), 500
 @app.route('/')
 def index():
     return jsonify({'mensaje': 'API HidroAlert funcionando ✅'})
