@@ -20,19 +20,6 @@ mysql.init_app(app)
 app.register_blueprint(usuario_bp)
 app.register_blueprint(crud_bp)
 
-@app.route('/api/usuarios')
-def obtener_usuarios():
-    try:
-        cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM usuarios")
-        usuarios = cursor.fetchall()
-        columnas = [col[0] for col in cursor.description]
-        usuarios = [dict(zip(columnas, fila)) for fila in usuarios]
-        cursor.close()
-        return jsonify({'usuarios': usuarios})
-    except Exception as ex:
-        return jsonify({'mensaje': 'Error al obtener usuarios', 'error': str(ex)}), 500
-
 
 @app.route('/api/registrar_usuario', methods=['POST'])
 def registrar_usuario():
@@ -84,6 +71,8 @@ def registrar_alerta():  # <- nombre correcto de la función
 @app.route('/')
 def index():
     return jsonify({'mensaje': 'API HidroAlert funcionando ✅'})
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
