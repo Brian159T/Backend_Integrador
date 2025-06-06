@@ -3,6 +3,7 @@ from flask_cors import CORS
 from db import mysql
 from Control_usuario import usuario_bp
 from Crud import crud_bp
+from Graficos import graficos_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +20,7 @@ mysql.init_app(app)
 
 app.register_blueprint(usuario_bp)
 app.register_blueprint(crud_bp)
+app.register_blueprint(graficos_bp)
 
 
 @app.route('/api/registrar_usuario', methods=['POST'])
@@ -29,7 +31,7 @@ def registrar_usuario():
     coordenadas = data.get('coordenadas')
     celular = data.get('celular')
     nombre = data.get('nombre')
-    rol = data.get('rol', 'Usuario')  # Usa "Usuario" como valor por defecto si no viene
+    rol = data.get('rol', 'Usuario')  
 
     try:
         cursor = mysql.connection.cursor()
@@ -46,7 +48,7 @@ def registrar_usuario():
         return jsonify({'mensaje': 'Error al registrar usuario ❌', 'error': str(ex)}), 500
 
 @app.route('/api/registrar_alerta', methods=['POST'])
-def registrar_alerta():  # <- nombre correcto de la función
+def registrar_alerta():  
     data = request.get_json()
     cuenca = data.get('cuenca')
     rio = data.get('rio')
