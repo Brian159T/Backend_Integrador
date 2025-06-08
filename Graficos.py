@@ -1,7 +1,11 @@
 from flask import Blueprint, Response
 from db import mysql
-import matplotlib.pyplot as plt
 from io import BytesIO
+
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 graficos_bp = Blueprint('graficos_bp', __name__)
 
@@ -37,7 +41,7 @@ def obtener_grafico_torta():
 
     except Exception as ex:
         return {'mensaje': 'Error al generar gráfico de torta ❌', 'error': str(ex)}, 500
-    
+
 @graficos_bp.route('/api/grafico-barras', methods=['GET'])
 def obtener_grafico_barras():
     try:
@@ -73,5 +77,3 @@ def obtener_grafico_barras():
 
     except Exception as ex:
         return {'mensaje': 'Error al generar gráfico de barras ❌', 'error': str(ex)}, 500
-
-
