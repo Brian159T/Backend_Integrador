@@ -1,8 +1,12 @@
 from twilio.rest import Client
-from flask import Blueprint, Response, request, jsonify
+from flask import Blueprint, Response
 from db import mysql
 
+from flask import request, jsonify
+
 mensajes_bp = Blueprint('mensajes_bp', __name__)
+
+
 
 @mensajes_bp.route('/api/alertar', methods=['POST'])
 def alertar_usuario():
@@ -26,9 +30,9 @@ Pronóstico: {alerta['Pronosticos']}
 Periodo: {alerta['Periodos']}
 """
 
-        # Configuración de Twilio (ficticia para evitar bloqueos)
-        account_sid = 'TWILIO_SID_AQUI'
-        auth_token = 'TWILIO_TOKEN_AQUI'
+        # Configuración de Twilio
+        account_sid = 'AC8cc4389ace769f89d4d9d3767ec710aa'
+        auth_token = 'ea2dbe882ac043e2bc5cf377659f3675'  # Reemplaza esto con tu token real
         client = Client(account_sid, auth_token)
 
         message = client.messages.create(
