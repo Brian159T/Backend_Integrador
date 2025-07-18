@@ -4,8 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mapa Interactivo</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
 </head>
-<body style="margin:0; padding:0;">
-  {{ map_html|safe }}
+<body>
+  <div id="map">
+    {{ map_html | safe }}
+  </div>
 </body>
 </html>

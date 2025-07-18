@@ -6,6 +6,7 @@ from Crud import crud_bp
 from Graficos import graficos_bp
 from Mensajes_twilio import mensajes_bp
 from Mapas import mapasbp
+from MapasG import mapasgbp
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +26,7 @@ app.register_blueprint(crud_bp)
 app.register_blueprint(graficos_bp)
 app.register_blueprint(mensajes_bp)
 app.register_blueprint(mapasbp)
+app.register_blueprint(mapasgbp)
 
 
 @app.route('/api/registrar_usuario', methods=['POST'])

@@ -45,3 +45,38 @@ Periodo: {alerta['Periodos']}
 
     except Exception as e:
         return jsonify({'mensaje': '❌ Error al enviar la alerta', 'error': str(e)}), 500
+
+@mensajes_bp.route('/api/alerta_personalizada', methods=['POST'])
+def alerta_personalizada():
+    cursor = mysql.connection.cursor()
+    sql = "SELECT * FROM Coordenadas_rio_taquina;"
+    cursor.execute(sql)
+    
+    resultados = cursor.fetchall()  # Obtener todos los registros
+    cursor.close()
+    
+    # Construir el diccionario
+    Coordenadas_rio = {}
+    for fila in resultados:
+        id_coordenada, nombre, latitud, longitud = fila
+        Coordenadas_rio[nombre] = [latitud, longitud]
+
+    cursor = mysql.connection.cursor()
+    sql = "SELECT * FROM usuarios"
+    cursor.execute(sql)
+    
+    resultados_usuario = cursor.fetchall()  # Obtener todos los registros
+    cursor.close()
+    
+    # Construir el diccionario
+    Coordenadas_usuario = {}
+    for fila in resultados_usuario:
+        id_usuarios,Roles,Contrasenas,Latitud,Celulares,Correos,Nombres,Longitud = fila
+        Coordenadas_usuario[Nombres] = [Latitud, Longitud,Celulares]
+
+
+    # Solo para ver que funciona
+    print(Coordenadas_rio)
+    
+    return {"coordenadas": Coordenadas_rio}  # Retornar como respuesta JSON si lo deseas
+
