@@ -1,6 +1,7 @@
 from twilio.rest import Client
 from flask import Blueprint, Response
 from db import mysql
+import math
 
 from flask import request, jsonify
 
@@ -49,34 +50,53 @@ Periodo: {alerta['Periodos']}
 @mensajes_bp.route('/api/alerta_personalizada', methods=['POST'])
 def alerta_personalizada():
     cursor = mysql.connection.cursor()
-    sql = "SELECT * FROM Coordenadas_rio_taquina;"
-    cursor.execute(sql)
-    
-    resultados = cursor.fetchall()  # Obtener todos los registros
-    cursor.close()
-    
-    # Construir el diccionario
-    Coordenadas_rio = {}
-    for fila in resultados:
-        id_coordenada, nombre, latitud, longitud = fila
-        Coordenadas_rio[nombre] = [latitud, longitud]
-
-    cursor = mysql.connection.cursor()
     sql = "SELECT * FROM usuarios"
     cursor.execute(sql)
-    
-    resultados_usuario = cursor.fetchall()  # Obtener todos los registros
+    resultados_usuario = cursor.fetchall()  
     cursor.close()
-    
-    # Construir el diccionario
+
     Coordenadas_usuario = {}
     for fila in resultados_usuario:
-        id_usuarios,Roles,Contrasenas,Latitud,Celulares,Correos,Nombres,Longitud = fila
-        Coordenadas_usuario[Nombres] = [Latitud, Longitud,Celulares]
+        id_usuarios, Roles, Contrasenas, Celulares, Correos, Nombres, Longitudes, Latitudes = fila
+        Coordenadas_usuario[Nombres] = [id_usuarios, Nombres, Latitudes, Longitudes, Celulares]
+
+    cursor = mysql.connection.cursor()
+    sql = "SELECT Latitudes, Longitudes FROM coordenadas_rio_taquina WHERE Nombres = %s"
+    cursor.execute(sql, ('Punto A',))
+    resultado = cursor.fetchone()
+    cursor.close()
+
+    if resultado:
+        T1 = math.radians(resultado[0])  # Latitud en radianes
+        L1 = math.radians(resultado[1])  # Longitud en radianes
+    else:
+        T1 = L1 = None
+        print("No se encontró 'Punto A'")
+
+    Distancia_punto_A = {}
+    r = 6371
+
+    for nombre, datos in Coordenadas_usuario.items():
+        N = datos[1]
+        T2 = math.radians(datos[2])  # convertir a radianes
+        L2 = math.radians(datos[3])
+        C = datos[4]
+
+        d = 2 * r * math.asin(math.sqrt(
+            math.sin((T2 - T1) / 2) ** 2 +
+            math.cos(T1) * math.cos(T2) * math.sin((L2 - L1) / 2) ** 2
+        ))
+
+        Distancia_punto_A[N] = [N, C, round(d, 3)]
+
+    return jsonify(Distancia_punto_A)
 
 
-    # Solo para ver que funciona
-    print(Coordenadas_rio)
+           
+
     
-    return {"coordenadas": Coordenadas_rio}  # Retornar como respuesta JSON si lo deseas
+
+
+
+   
 
