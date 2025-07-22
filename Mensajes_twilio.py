@@ -49,47 +49,96 @@ Periodo: {alerta['Periodos']}
 
 @mensajes_bp.route('/api/alerta_personalizada', methods=['POST'])
 def alerta_personalizada():
-    cursor = mysql.connection.cursor()
-    sql = "SELECT * FROM usuarios"
-    cursor.execute(sql)
-    resultados_usuario = cursor.fetchall()  
-    cursor.close()
+    try:
+        # 1. Obtener datos de usuarios
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT * FROM usuarios")
+        resultados_usuario = cursor.fetchall()
+        cursor.close()
 
-    Coordenadas_usuario = {}
-    for fila in resultados_usuario:
-        id_usuarios, Roles, Contrasenas, Celulares, Correos, Nombres, Longitudes, Latitudes = fila
-        Coordenadas_usuario[Nombres] = [id_usuarios, Nombres, Latitudes, Longitudes, Celulares]
+        Coordenadas_usuario = {}
+        for fila in resultados_usuario:
+            id_usuarios, Roles, Contrasenas, Celulares, Correos, Nombres, Longitudes, Latitudes = fila
+            Coordenadas_usuario[Nombres] = [id_usuarios, Nombres, Latitudes, Longitudes, Celulares]
 
-    cursor = mysql.connection.cursor()
-    sql = "SELECT Latitudes, Longitudes FROM coordenadas_rio_taquina WHERE Nombres = %s"
-    cursor.execute(sql, ('Punto A',))
-    resultado = cursor.fetchone()
-    cursor.close()
+        # 2. Obtener coordenadas del punto A (corrigido: Latitudes y Longitudes)
+        cursor = mysql.connection.cursor()
+        cursor.execute("SELECT Latitudes, Longitudes FROM coordenadas_rio_taquina WHERE Nombres = %s", ('Punto A',))
+        resultado = cursor.fetchone()
+        cursor.close()
 
-    if resultado:
-        T1 = math.radians(resultado[0])  # Latitud en radianes
-        L1 = math.radians(resultado[1])  # Longitud en radianes
-    else:
-        T1 = L1 = None
-        print("No se encontró 'Punto A'")
+        if not resultado:
+            return jsonify({'mensaje': "❌ No se encontró 'Punto A' en la base de datos"}), 404
 
-    Distancia_punto_A = {}
-    r = 6371
+        T1 = math.radians(resultado[0])  # Latitudes
+        L1 = math.radians(resultado[1])  # Longitudes
 
-    for nombre, datos in Coordenadas_usuario.items():
-        N = datos[1]
-        T2 = math.radians(datos[2])  # convertir a radianes
-        L2 = math.radians(datos[3])
-        C = datos[4]
+        # 3. Calcular distancia y enviar alertas si corresponde
+        r = 6371  # Radio de la Tierra en km
+        Distancia_punto_A = {}
 
-        d = 2 * r * math.asin(math.sqrt(
-            math.sin((T2 - T1) / 2) ** 2 +
-            math.cos(T1) * math.cos(T2) * math.sin((L2 - L1) / 2) ** 2
-        ))
+        data = request.get_json()
+        print("📦 Datos recibidos:", data)
 
-        Distancia_punto_A[N] = [N, C, round(d, 3)]
+        alerta = data.get('alerta')
+        if not alerta:
+            return jsonify({'mensaje': '❌ Falta el campo \"alerta\" en el cuerpo JSON'}), 400
 
-    return jsonify(Distancia_punto_A)
+        for nombre, datos in Coordenadas_usuario.items():
+            N = datos[1]
+            T2 = math.radians(datos[2])
+            L2 = math.radians(datos[3])
+            C = datos[4]
+
+            d = 2 * r * math.asin(math.sqrt(
+                math.sin((T2 - T1) / 2) ** 2 +
+                math.cos(T1) * math.cos(T2) * math.sin((L2 - L1) / 2) ** 2
+            ))
+
+            Distancia_punto_A[N] = [N, C, round(d, 3)]
+
+            if d < 3:
+                numero = C
+
+                if not numero.startswith('+'):
+                    print(f"⚠️ Número inválido: {numero}")
+                    continue
+
+                texto = f"""
+🚨 *Alerta Hidrológica* 🚨
+Cuenca: {alerta.get('Cuencas')}
+Río: {alerta.get('Rios')}
+Caudal: {alerta.get('Niveles')} m³/s
+Condición: {alerta.get('Condiciones')}
+Pronóstico: {alerta.get('Pronosticos')}
+Periodo: {alerta.get('Periodos')}
+"""
+
+                # Enviar mensaje con Twilio
+                account_sid = 'AC8cc4389ace769f89d4d9d3767ec710aa'
+                auth_token = 'ea2dbe882ac043e2bc5cf377659f3675'
+                client = Client(account_sid, auth_token)
+
+                try:
+                    message = client.messages.create(
+                        from_='whatsapp:+14155238886',
+                        body=texto,
+                        to=f'whatsapp:{numero}'
+                    )
+                    print(f"✅ Mensaje enviado a {numero}")
+                except Exception as twilio_error:
+                    print(f"❌ Error al enviar a {numero}: {twilio_error}")
+
+        return jsonify({'mensaje': '✅ Alertas procesadas correctamente'}), 200
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'mensaje': '❌ Error al enviar las alertas', 'error': str(e)}), 500
+
+
+
+    
 
 
            

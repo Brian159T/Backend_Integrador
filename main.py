@@ -34,7 +34,8 @@ def registrar_usuario():
     data = request.get_json()
     correo = data.get('correo')
     password = data.get('password')
-    coordenadas = data.get('coordenadas')
+    latitud = data.get('latitud')
+    longitud = data.get('longitud')  # ✅ corregido
     celular = data.get('celular')
     nombre = data.get('nombre')
     rol = data.get('rol', 'Usuario')  
@@ -42,16 +43,17 @@ def registrar_usuario():
     try:
         cursor = mysql.connection.cursor()
         sql = """
-            INSERT INTO usuarios (Roles, Contrasenas, Coordenadas, Celulares, Correos, Nombres)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO usuarios (Roles, Contrasenas, Celulares, Correos, Nombres, Longitudes, Latitudes)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        datos = (rol, password, coordenadas, celular, correo, nombre)
+        datos = (rol, password, celular, correo, nombre, longitud, latitud)  # ✅ orden correcto
         cursor.execute(sql, datos)
         mysql.connection.commit()
         cursor.close()
         return jsonify({'mensaje': 'Cuenta creada correctamente ✅'})
     except Exception as ex:
         return jsonify({'mensaje': 'Error al registrar usuario ❌', 'error': str(ex)}), 500
+
 
 @app.route('/api/registrar_alerta', methods=['POST'])
 def registrar_alerta():  

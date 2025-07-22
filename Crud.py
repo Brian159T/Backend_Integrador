@@ -37,16 +37,17 @@ def actualizar_usuario(id):
     try:
         data = request.json
         correo = data.get('Correos')
-        coordenadas = data.get('Coordenadas')
+        latitud = data.get('Latitudes')   # Cambiado aquí
+        longitud = data.get('Longitudes') # Cambiado aquí
         celular = data.get('Celulares')
         nombre = data.get('Nombres')
 
         cursor = mysql.connection.cursor()
         cursor.execute("""
             UPDATE usuarios 
-            SET Correos = %s, Coordenadas = %s, Celulares = %s, Nombres = %s 
+            SET Correos = %s, Longitudes = %s, Latitudes = %s, Celulares = %s, Nombres = %s 
             WHERE id_usuarios = %s
-        """, (correo, coordenadas, celular, nombre, id))
+        """, (correo, longitud, latitud, celular, nombre, id))
         mysql.connection.commit()
         cursor.close()
         return jsonify({'mensaje': 'Usuario actualizado correctamente'})
@@ -59,7 +60,8 @@ def registrar_usuario():
     data = request.get_json()
     correo = data.get('correo')
     password = data.get('password')
-    coordenadas = data.get('coordenadas')
+    latitud = data.get('latitud')
+    longitud = data.get('longitud')
     celular = data.get('celular')
     nombre = data.get('nombre')
     rol = data.get('rol', 'Usuario')  
@@ -67,10 +69,10 @@ def registrar_usuario():
     try:
         cursor = mysql.connection.cursor()
         sql = """
-            INSERT INTO usuarios (Roles, Contrasenas, Coordenadas, Celulares, Correos, Nombres)
+            INSERT INTO usuarios (Roles, Contrasenas, Coordenadas, Celulares, Correos, Nombres, Longitudes, Latitudes)
             VALUES (%s, %s, %s, %s, %s, %s)
         """
-        datos = (rol, password, coordenadas, celular, correo, nombre)
+        datos = (rol, password, celular, correo, nombre, longitud, latitud)  # Orden correcto
         cursor.execute(sql, datos)
         mysql.connection.commit()
         cursor.close()
