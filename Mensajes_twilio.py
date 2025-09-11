@@ -125,7 +125,7 @@ Periodo: {alerta.get('Periodos')}
                         body=texto,
                         to=f'whatsapp:{numero}'
                     )
-                    print(f"✅ Mensaje enviado a {numero}")
+                    print(f"✅ Menssssaje enviado a {numero}")
                 except Exception as twilio_error:
                     print(f"❌ Error al enviar a {numero}: {twilio_error}")
 
