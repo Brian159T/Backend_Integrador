@@ -138,12 +138,11 @@ Periodo: {alerta.get('Periodos')}
 
 
 
-    
-
 
            
 
     
+
 
 
 

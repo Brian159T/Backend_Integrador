@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 from flask import Blueprint, jsonify, request
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
+import unicodedata
 
 # Definir Blueprint
 Descargas_bp = Blueprint('descargas_bp', __name__)
@@ -12,7 +13,14 @@ Descargas_bp = Blueprint('descargas_bp', __name__)
 # Scheduler global
 scheduler = None
 
-# Función auxiliar (descarga PDFs)
+# Función para normalizar (quita acentos, convierte a minúsculas)
+def normalizar(texto: str) -> str:
+    return ''.join(
+        c for c in unicodedata.normalize('NFD', texto.lower())
+        if unicodedata.category(c) != 'Mn'
+    )
+
+# Función auxiliar (descarga PDFs filtrados)
 def descargar_pdfs_desde(url, carpeta_destino=r"D:\PDF_SENAMHI"):
     try:
         if not os.path.exists(carpeta_destino):
@@ -22,12 +30,18 @@ def descargar_pdfs_desde(url, carpeta_destino=r"D:\PDF_SENAMHI"):
             print(f"[{datetime.now()}] Carpeta ya existe: {carpeta_destino}")
     except Exception as e:
         print(f"[{datetime.now()}] ❌ Error al crear la carpeta {carpeta_destino}: {e}")
-        return {"total": 0, "descargados": [], "omitidos": [], "errores": [{"carpeta": carpeta_destino, "error": str(e)}]}
+        return {
+            "total": 0,
+            "descargados": [],
+            "omitidos": [],
+            "errores": [{"carpeta": carpeta_destino, "error": str(e)}]
+        }
 
     response = requests.get(url)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
 
+    # ✅ Buscar todos los links PDF
     enlaces_pdf = [a.get("href") for a in soup.find_all("a", href=True) if a["href"].lower().endswith(".pdf")]
 
     descargados, omitidos, errores = [], [], []
@@ -35,14 +49,23 @@ def descargar_pdfs_desde(url, carpeta_destino=r"D:\PDF_SENAMHI"):
     for enlace in enlaces_pdf:
         enlace_completo = urljoin(url, enlace)
         nombre_archivo = os.path.basename(enlace_completo)
+
+        # Normalizar nombre (minúsculas y sin tildes)
+        nombre_norm = normalizar(nombre_archivo)
+
+        #  Filtro: debe contener estas palabras
+        if not all(palabra in nombre_norm for palabra in ["planilla", "pronostico", "hidrologico", "senamhi"]):
+            continue
+
         ruta_guardado = os.path.join(carpeta_destino, nombre_archivo)
 
+        # Si ya existe, lo omitimos
         if os.path.exists(ruta_guardado):
             omitidos.append(nombre_archivo)
             continue
 
         try:
-            r = requests.get(enlace_completo)
+            r = requests.get(enlace_completo, timeout=15)
             r.raise_for_status()
             with open(ruta_guardado, "wb") as f:
                 f.write(r.content)
@@ -50,7 +73,9 @@ def descargar_pdfs_desde(url, carpeta_destino=r"D:\PDF_SENAMHI"):
         except Exception as e:
             errores.append({"archivo": nombre_archivo, "error": str(e)})
 
-    print(f"[{datetime.now()}] Descarga ejecutada → Total: {len(enlaces_pdf)}, Nuevos: {len(descargados)}, Omitidos: {len(omitidos)}")
+    print(f"[{datetime.now()}] Descarga ejecutada → Total encontrados: {len(enlaces_pdf)}, "
+          f"Filtrados: {len(descargados)+len(omitidos)}, Nuevos: {len(descargados)}, "
+          f"Omitidos: {len(omitidos)}")
 
     return {"total": len(enlaces_pdf), "descargados": descargados, "omitidos": omitidos, "errores": errores}
 
