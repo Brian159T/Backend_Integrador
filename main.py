@@ -11,7 +11,8 @@ from Descarga_automatica import Descargas_bp, iniciar_scheduler, descargar_pdfs_
 import threading
 from datetime import datetime
 from Lectura import lectura_bp
-
+from Qgis import q_gis_bp
+from Reportes import reportes_bp
 app = Flask(__name__)
 CORS(app)
 
@@ -32,6 +33,8 @@ app.register_blueprint(mapasbp)
 app.register_blueprint(mapasgbp)
 app.register_blueprint(Descargas_bp)
 app.register_blueprint(lectura_bp)
+app.register_blueprint(q_gis_bp)
+app.register_blueprint(reportes_bp)
 
 # Rutas API
 @app.route('/api/registrar_usuario', methods=['POST'])

@@ -1,0 +1,161 @@
+
+[2025-10-19 18:08:25] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 1
+STDOUT:
+
+STDERR:
+Traceback (most recent call last):
+  File "C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\qgis_visualizar_shp.py", line 54, in <module>
+    print(f"\u274c No existe {cuenca_path}")
+  File "C:\Program Files\QGIS 3.40.11\apps\Python312\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+
+--------------------------------------------------------
+
+[2025-10-19 18:11:37] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 1
+STDOUT:
+
+STDERR:
+Traceback (most recent call last):
+  File "C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\qgis_visualizar_shp.py", line 54, in <module>
+    print(f"\u274c No existe {cuenca_path}")
+  File "C:\Program Files\QGIS 3.40.11\apps\Python312\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u274c' in position 0: character maps to <undefined>
+
+--------------------------------------------------------
+
+[2025-10-19 18:15:18] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[ERROR] No existe D:\Archivos_Gis\2cuengrpolig.shp
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 18:23:46] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[ERROR] No existe D:\Archivos_Gis\2cuengrpolig.shp
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 18:35:50] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[ERROR] No existe D:\Archivos_Gis\2cuengrpolig.shp
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 18:36:47] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[ERROR] No existe D:\Archivos_Gis\2cuengrpolig.shp
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 18:38:08] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[ERROR] No existe D:\Archivos_Gis\2cuengrpolig.shp
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 18:39:39] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 1
+STDOUT:
+
+STDERR:
+Traceback (most recent call last):
+  File "C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\qgis_visualizar_shp.py", line 36, in <module>
+    if os.path.exists(raster_path):
+                      ^^^^^^^^^^^
+NameError: name 'raster_path' is not defined
+
+--------------------------------------------------------
+
+[2025-10-19 18:40:41] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 1
+STDOUT:
+
+STDERR:
+Traceback (most recent call last):
+  File "C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\qgis_visualizar_shp.py", line 36, in <module>
+    if os.path.exists(raster_path):
+                      ^^^^^^^^^^^
+NameError: name 'raster_path' is not defined
+
+--------------------------------------------------------
+
+[2025-10-19 18:41:44] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 18:48:52] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 18:52:33] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 19:27:17] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------
+
+[2025-10-19 19:35:02] --- EJECUCIÓN DE qgis_visualizar_shp.py ---
+RETURNCODE: 0
+STDOUT:
+[OK] Mapa generado correctamente en: C:\laragon\www\Proyecto Integrador Angular-Flask\Backend\temp\cuenca_taquina.png
+
+STDERR:
+ERROR 6: The PNG driver does not support update access to existing datasets.
+
+--------------------------------------------------------

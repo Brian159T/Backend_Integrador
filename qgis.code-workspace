@@ -1,0 +1,33 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "python.defaultInterpreterPath": "C:\\Program Files\\QGIS 3.40.11\\apps\\Python312\\python.exe",
+        "python.envFile": "${workspaceFolder}/.env",
+        "python.analysis.extraPaths": [
+            "C:\\Program Files\\QGIS 3.40.11\\apps\\qgis-ltr\\python",
+            "C:\\Program Files\\QGIS 3.40.11\\apps\\qgis-ltr\\python\\plugins"
+        ],
+        "terminal.integrated.env.windows": {
+            "Path": "C:\\Program Files\\QGIS 3.40.11\\apps\\Python312;C:\\Program Files\\QGIS 3.40.11\\apps\\Python312\\Scripts;${env:Path}"
+        }
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "QGIS python",
+                "type": "debugpy",
+                "request": "launch",
+                "program": "${file}",
+                "console": "integratedTerminal",
+                "envFile": "${workspaceFolder}/.env",
+                "justMyCode": false,
+                "stopOnEntry": false
+            }
+        ]
+    }
+}
